@@ -1,0 +1,33 @@
+
+Mini Trello - Java
+
+Classes e atributos:
+
+- User -> id, nome, email, senha, List<Dashboard>;
+- PriorityTags -> BAIXA, NORMAL, ALTA, URGENTE;	
+- Card -> id, titulo, tarefa, prioridade, user
+- Column -> id, titulo, List<Card>
+- Dashboard -> titulo, List<column>
+
+Regras de negócio:
+
+- User não terá a opcão de redefinir senha
+- Um card só pode existir dentro de uma coluna, não pode existir solto
+- Um card pode ser criado, excluído, editado e movido de coluna
+- Uma coluna pode editada e excluída
+- Quando uma coluna for deletada, todos os cards dentro dela devem ser deltados juntos
+- Os dados devem guardados dentro de arquivos JSON, simulando um Banco de Dados local.
+- Todos os campos do Card são obrigatórios
+
+Ideia de implementacao:
+
+- O sistema terá um menu inicial, solicitando email e senha do usuário. após o Login ou criacao de um novo usuário,   
+  a tela inicial terá opcoes como, criar dashboard, acessar dashboards, e finalizar programa. Acessando o Dashboard, o usuário pode
+  ter opcoes como alterar nome, exlcuir dashboard, visualizar dashboard, editar coluna, criar card, etc. O menu deve ser melhor pensado
+  após a criacao da lógica do projeto.
+
+métodos:
+
+- Card -> getters e setters
+- Column -> getters e setters, adicionaCard(Card c), removeCard(Card c)
+- Dashboard -> getters e setters, adicionaColuna(Column c), removeColuna(Column c), trocaColunaCard(Card c, Column origem, Column destino)

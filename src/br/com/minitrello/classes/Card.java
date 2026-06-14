@@ -49,8 +49,8 @@ public class Card {
         return id;
     }
 
-    public Priority getTag() {
-        return tag;
+    public String getTag() {
+        return tag.getName();
     }
 
     public void setTag(Priority tag) {

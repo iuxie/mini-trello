@@ -1,15 +1,15 @@
 package br.com.minitrello.classes;
 
-public enum PriorityTags {
+public enum Priority {
 
     BAIXA("Baixa"),
     NORMAL("Normal"),
-        ALTA("Alta"),
+    ALTA("Alta"),
     URGENTE("Urgente");
 
     private final String name;
 
-    PriorityTags(String name) {
+    Priority(String name) {
         this.name = name;
     }
 

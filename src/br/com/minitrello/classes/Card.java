@@ -4,16 +4,21 @@ import java.util.UUID;
 
 public class Card {
 
-    //  TODO: Implementar atributo de prioridade após a criacao do ENUM.
     private final UUID id;
     private String title, description;
     private User user;
+    private Priority tag;
 
     public Card(String title, String description, User user) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.description = description;
         this.user = user;
+    }
+
+    public Card(String title, String description, User user, Priority tag) {
+        this(title, description, user);
+        this.tag = tag;
     }
 
     public String getTitle() {
@@ -40,9 +45,22 @@ public class Card {
         this.user = user;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public Priority getTag() {
+        return tag;
+    }
+
+    public void setTag(Priority tag) {
+        this.tag = tag;
+    }
+
     @Override
     public String toString() {
-        return "Título: " + title + " | Descricao: " + description + " | Usuário: " + user;
+        return "Título: " + title + " | Descricao: " + description + " | Usuário: " + user
+                + " | Prioridade: " + tag.getName();
     }
 
 }

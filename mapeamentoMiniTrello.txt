@@ -15,7 +15,7 @@ Regras de negócio:
 - Um card só pode existir dentro de uma coluna, não pode existir solto
 - Um card pode ser criado, excluído, editado e movido de coluna
 - Uma coluna pode editada e excluída
-- Quando uma coluna for deletada, todos os cards dentro dela devem ser deltados juntos
+- Quando uma coluna for deletada, todos os cards dentro dela devem ser deletados juntos
 - Os dados devem guardados dentro de arquivos JSON, simulando um Banco de Dados local.
 - Todos os campos do Card são obrigatórios
 

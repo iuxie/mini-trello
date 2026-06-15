@@ -1,6 +1,6 @@
 package br.com.minitrello.classes;
 
-import br.com.minitrello.data.JsonDatabase; // Importe a classe que criamos
+import br.com.minitrello.data.JsonDatabase;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,14 +38,14 @@ public class MenuController {
         System.out.println("3 - Finalizar programa");
         System.out.print("Escolha uma opcao: ");
 
-        int opcao = Integer.parseInt(input.nextLine());
+        int option = Integer.parseInt(input.nextLine());
 
-        switch (opcao) {
+        switch (option) {
             case 1:
-                fazerLogin();
+                login();
                 break;
             case 2:
-                criarUsuario();
+                createUser();
                 break;
             case 3:
                 running = false;
@@ -56,7 +56,7 @@ public class MenuController {
         }
     }
 
-    private void fazerLogin() {
+    private void login() {
         System.out.print("Digite seu email: ");
         String email = input.nextLine();
         System.out.print("Digite sua senha: ");
@@ -72,18 +72,18 @@ public class MenuController {
         System.out.println("Email ou senha incorretos.");
     }
 
-    private void criarUsuario() {
+    private void createUser() {
         System.out.print("Digite seu nome: ");
-        String nome = input.nextLine();
+        String name = input.nextLine();
         System.out.print("Digite seu email: ");
         String email = input.nextLine();
         System.out.print("Digite sua senha: ");
-        String senha = input.nextLine();
+        String password = input.nextLine();
 
-        User novoUsuario = new User(nome, email, senha);
-        usersList.add(novoUsuario);
+        User newUser = new User(name, email, password);
+        usersList.add(newUser);
 
-        loggedUser = novoUsuario;
+        loggedUser = newUser;
 
         database.saveUsers(usersList);
 
@@ -100,24 +100,24 @@ public class MenuController {
         System.out.println("5 - Logout");
         System.out.print("Escolha uma opcao: ");
 
-        int opcao = Integer.parseInt(input.nextLine());
+        int option = Integer.parseInt(input.nextLine());
 
-        switch (opcao) {
+        switch (option) {
             case 1:
-                listarDashboards();
+                showDashboard();
                 break;
             case 2:
-                acessarDashboard();
+                enterDashboard();
                 break;
             case 3:
-                criarDashboard();
+                createDashboard();
                 break;
             case 4:
-                excluirDashboard();
+                deleteDashboard();
                 break;
             case 5:
                 System.out.println("Fazendo logout...");
-                loggedUser = null; // Isso faz o laço voltar para o menu de autenticação
+                loggedUser = null;
                 break;
             default:
                 System.out.println("Opcao inválida! Tente novamente.");
@@ -125,7 +125,7 @@ public class MenuController {
         }
     }
 
-    private void listarDashboards() {
+    private void showDashboard() {
         List<Dashboard> dashboards = loggedUser.getDashboards();
 
         if (dashboards.isEmpty()) {
@@ -135,31 +135,31 @@ public class MenuController {
 
         System.out.println("\n--- Seus Dashboards ---");
         for (int i = 0; i < dashboards.size(); i++) {
-            System.out.println((i + 1) + " - " + dashboards.get(i).getTitle());
+            System.out.println((i) + " - " + dashboards.get(i).getTitle());
         }
     }
 
-    private void criarDashboard() {
+    private void createDashboard() {
         System.out.print("\nDigite o título do novo Dashboard: ");
-        String titulo = input.nextLine();
+        String title = input.nextLine();
 
-        Dashboard novoDash = new Dashboard(titulo);
-        loggedUser.getDashboards().add(novoDash);
+        Dashboard newDash = new Dashboard(title);
+        loggedUser.getDashboards().add(newDash);
 
         database.saveUsers(usersList);
 
-        System.out.println("Dashboard '" + titulo + "' criado com sucesso!");
+        System.out.println("Dashboard '" + title + "' criado com sucesso!");
     }
 
-    private void excluirDashboard() {
-        listarDashboards();
+    private void deleteDashboard() {
+        showDashboard();
 
         if (loggedUser.getDashboards().isEmpty()) {
             return;
         }
 
-        System.out.print("\nDigite o número do Dashboard que deseja excluir (ou 0 para cancelar): ");
-        int index = Integer.parseInt(input.nextLine()) - 1;
+        System.out.print("\nDigite o número do Dashboard que deseja excluir (ou -1 para cancelar): ");
+        int index = Integer.parseInt(input.nextLine());
 
         if (index == -1) {
             System.out.println("Operação cancelada.");
@@ -167,36 +167,268 @@ public class MenuController {
         }
 
         if (index >= 0 && index < loggedUser.getDashboards().size()) {
-            Dashboard dashRemovido = loggedUser.getDashboards().remove(index);
+            Dashboard deletedDash = loggedUser.getDashboards().remove(index);
             database.saveUsers(usersList);
-            System.out.println("Dashboard '" + dashRemovido.getTitle() + "' excluído com sucesso!");
+            System.out.println("Dashboard '" + deletedDash.getTitle() + "' excluído com sucesso!");
         } else {
             System.out.println("Opção inválida!");
         }
     }
 
-    private void acessarDashboard() {
-        listarDashboards();
+    private void enterDashboard() {
+        showDashboard();
 
         if (loggedUser.getDashboards().isEmpty()) {
             return;
         }
 
         System.out.print("\nDigite o número do Dashboard que deseja acessar: ");
-        int index = Integer.parseInt(input.nextLine()) - 1;
+        int index = Integer.parseInt(input.nextLine());
 
         if (index >= 0 && index < loggedUser.getDashboards().size()) {
-            Dashboard dashboardSelecionado = loggedUser.getDashboards().get(index);
-            System.out.println("Acessando '" + dashboardSelecionado.getTitle() + "'...");
+            Dashboard selectedDash = loggedUser.getDashboards().get(index);
+            System.out.println("Acessando '" + selectedDash.getTitle() + "'...");
 
-            menuDoDashboard(dashboardSelecionado);
+            dashboardMenu(selectedDash);
         } else {
             System.out.println("Opção inválida!");
         }
     }
 
-    private void menuDoDashboard(Dashboard dashboard) {
+    private void dashboardMenu(Dashboard dashboard) {
+        boolean inDashboard = true;
 
+        while (inDashboard) {
+            System.out.println("\n==== Dashboard: " + dashboard.getTitle() + " ====");
+            System.out.println("1 - Ver Colunas e Cards");
+            System.out.println("2 - Criar Coluna");
+            System.out.println("3 - Criar Card");
+            System.out.println("4 - Deletar Coluna");
+            System.out.println("5 - Deletar Card");
+            System.out.println("6 - Editar Card");
+            System.out.println("7 - Editar Coluna");
+            System.out.println("8 - Alterar Título do Dashboard");
+            System.out.println("9 - Voltar ao Menu Principal");
+            System.out.print("Escolha sua opcao: ");
+
+            int option = Integer.parseInt(input.nextLine());
+
+            switch (option) {
+                case 1:
+                    showColumns(dashboard);
+                    break;
+                case 2:
+                    createColumn(dashboard);
+                    break;
+                case 3:
+                    createCard(dashboard);
+                    break;
+                case 4:
+                    deleteColumn(dashboard);
+                    break;
+                case 5:
+                    deleteCard(dashboard);
+                    break;
+                case 6:
+                    editCard(dashboard);
+                    break;
+                case 7:
+                    editColumn(dashboard);
+                    break;
+                case 8:
+                    editDashboardTitle(dashboard);
+                    break;
+                case 9:
+                    inDashboard = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    break;
+            }
+        }
+    }
+
+    private void showColumns(Dashboard d) {
+        if (d.getColumns().isEmpty()) {
+            System.out.println("\nEste dashboard ainda não possui colunas.");
+            return;
+        }
+        System.out.println("\n--- Colunas ---");
+        for (int i = 0; i < d.getColumns().size(); i++) {
+            Column col = d.getColumns().get(i);
+            System.out.println(i + " - [Coluna] " + col.getTitle());
+            for (int j = 0; j < col.getCards().size(); j++) {
+                System.out.println("    Card " + j + ": " + col.getCards().get(j).toString());
+            }
+        }
+    }
+
+    private void createColumn(Dashboard d) {
+        System.out.print("Informe o nome da coluna: ");
+        String name = input.nextLine();
+
+        Column newColumn = new Column(name);
+        d.addColumn(newColumn);
+
+        database.saveUsers(usersList);
+        System.out.println("Coluna '" + newColumn.getTitle() + "' adicionada com sucesso!");
+    }
+
+    private void createCard(Dashboard d) {
+        if (d.getColumns().isEmpty()) {
+            System.out.println("Você não tem colunas! Um Card não pode existir sem uma coluna.");
+            return;
+        }
+
+        showColumns(d);
+        System.out.print("\nEscolha a coluna em que o Card será criado (digite apenas o número): ");
+        int index = Integer.parseInt(input.nextLine());
+
+        if (index >= 0 && index < d.getColumns().size()) {
+            System.out.print("Digite o nome do Card: ");
+            String name = input.nextLine();
+            System.out.print("Digite a descricao do Card: ");
+            String description = input.nextLine();
+
+            Priority.showPrioritys();
+            System.out.print("Escolha a prioridade do Card: ");
+            int option = Integer.parseInt(input.nextLine());
+            Priority tag = Priority.NORMAL; // Padrão caso o usuário erre
+
+            switch (option) {
+                case 1:
+                    tag = Priority.BAIXA;
+                    break;
+                case 2:
+                    tag = Priority.NORMAL;
+                    break;
+                case 3:
+                    tag = Priority.ALTA;
+                    break;
+                case 4:
+                    tag = Priority.URGENTE;
+                    break;
+                default:
+                    System.out.println("Opção de prioridade inválida. Definido como NORMAL.");
+                    break;
+            }
+
+            Card newCard = new Card(name, description, loggedUser, tag);
+            d.getColumns().get(index).addCard(newCard);
+
+            database.saveUsers(usersList);
+            System.out.println("Card adicionado com sucesso!");
+        } else {
+            System.out.println("Coluna não encontrada.");
+        }
+    }
+
+    private void deleteColumn(Dashboard d) {
+        if (d.getColumns().isEmpty()) {
+            System.out.println("Não há colunas para deletar.");
+            return;
+        }
+
+        showColumns(d);
+        System.out.print("\nDigite o número da Coluna que deseja excluir (Isso excluirá todos os cards nela): ");
+        int index = Integer.parseInt(input.nextLine());
+
+        if (index >= 0 && index < d.getColumns().size()) {
+            d.getColumns().remove(index);
+            database.saveUsers(usersList);
+            System.out.println("Coluna removida com sucesso.");
+        } else {
+            System.out.println("Coluna inválida.");
+        }
+    }
+
+    private void deleteCard(Dashboard d) {
+        if (d.getColumns().isEmpty()) {
+            System.out.println("Não há colunas/cards.");
+            return;
+        }
+
+        showColumns(d);
+        System.out.print("\nDe qual coluna você quer excluir um card? (Digite o número da coluna): ");
+        int colIndex = Integer.parseInt(input.nextLine());
+
+        if (colIndex >= 0 && colIndex < d.getColumns().size()) {
+            Column col = d.getColumns().get(colIndex);
+            if (col.getCards().isEmpty()) {
+                System.out.println("Esta coluna não possui cards.");
+                return;
+            }
+
+            System.out.print("Digite o número do Card a ser excluído: ");
+            int cardIndex = Integer.parseInt(input.nextLine());
+
+            if (cardIndex >= 0 && cardIndex < col.getCards().size()) {
+                col.getCards().remove(cardIndex);
+                database.saveUsers(usersList);
+                System.out.println("Card removido com sucesso.");
+            } else {
+                System.out.println("Card inválido.");
+            }
+        } else {
+            System.out.println("Coluna inválida.");
+        }
+    }
+
+    private void editCard(Dashboard d) {
+        if (d.getColumns().isEmpty()) return;
+
+        showColumns(d);
+        System.out.print("\nDe qual coluna é o card que deseja editar? ");
+        int colIndex = Integer.parseInt(input.nextLine());
+
+        if (colIndex >= 0 && colIndex < d.getColumns().size()) {
+            Column col = d.getColumns().get(colIndex);
+            System.out.print("Digite o número do Card a ser editado: ");
+            int cardIndex = Integer.parseInt(input.nextLine());
+
+            if (cardIndex >= 0 && cardIndex < col.getCards().size()) {
+                Card card = col.getCards().get(cardIndex);
+
+                System.out.print("Novo título (ou Enter para manter): ");
+                String novoTitulo = input.nextLine();
+                if (!novoTitulo.isEmpty()) card.setTitle(novoTitulo);
+
+                System.out.print("Nova descrição (ou Enter para manter): ");
+                String novaDescricao = input.nextLine();
+                if (!novaDescricao.isEmpty()) card.setDescription(novaDescricao);
+
+                database.saveUsers(usersList);
+                System.out.println("Card atualizado!");
+            }
+        }
+    }
+
+    private void editColumn(Dashboard d) {
+        if (d.getColumns().isEmpty()) return;
+
+        showColumns(d);
+        System.out.print("\nDigite o número da coluna a ser editada: ");
+        int index = Integer.parseInt(input.nextLine());
+
+        if (index >= 0 && index < d.getColumns().size()) {
+            System.out.print("Novo título da coluna: ");
+            String novoTitulo = input.nextLine();
+            d.getColumns().get(index).setTitle(novoTitulo);
+
+            database.saveUsers(usersList);
+            System.out.println("Coluna atualizada!");
+        }
+    }
+
+    private void editDashboardTitle(Dashboard d) {
+        System.out.print("\nNovo título para o Dashboard: ");
+        String novoTitulo = input.nextLine();
+
+        if (!novoTitulo.isEmpty()) {
+            d.setTitle(novoTitulo);
+            database.saveUsers(usersList);
+            System.out.println("Título alterado com sucesso!");
+        }
     }
 
 }

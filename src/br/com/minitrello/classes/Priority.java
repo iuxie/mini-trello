@@ -17,4 +17,11 @@ public enum Priority {
         return name;
     }
 
+    public static void showPrioritys() {
+        System.out.println("1 - Baixa");
+        System.out.println("2 - Normal");
+        System.out.println("3 - Alta");
+        System.out.println("4 - Urgente");
+    }
+
 }

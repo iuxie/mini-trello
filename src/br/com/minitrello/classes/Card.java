@@ -6,7 +6,7 @@ public class Card {
 
     private final UUID id;
     private String title, description;
-    private User user;
+    private transient User user;
     private Priority tag;
 
     public Card(String title, String description, User user) {

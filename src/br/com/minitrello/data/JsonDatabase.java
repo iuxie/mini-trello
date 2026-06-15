@@ -14,7 +14,7 @@ import java.util.List;
 
 public class JsonDatabase {
 
-    private static final String FILE_PATH = "database.json";
+    private static final String FILE_PATH = "C:\\Users\\IureX\\Documents\\Estudos e Faculdade\\Batismo de Java\\nível iniciante\\miniTrello\\src\\br\\com\\minitrello\\data\\database.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public List<User> loadUsers() {

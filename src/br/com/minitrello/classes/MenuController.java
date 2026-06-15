@@ -31,7 +31,7 @@ public class MenuController {
         input.close();
     }
 
-    public void authenticateMenu() {
+    private void authenticateMenu() {
         System.out.println("\n==== Menu de Autenticacao ====");
         System.out.println("1 - Fazer Login");
         System.out.println("2 - Criar usuário");
@@ -90,7 +90,113 @@ public class MenuController {
         System.out.println("Usuário criado com sucesso!");
     }
 
-    public void mainMenu() {
+    private void mainMenu() {
+        System.out.println("\n==== Menu Principal ====");
+        System.out.println("Usuário Logado: " + loggedUser.getName() + "\n");
+        System.out.println("1 - Listar Dashboards");
+        System.out.println("2 - Acessar Dashboard");
+        System.out.println("3 - Criar Dashboard");
+        System.out.println("4 - Excluir Dashboard");
+        System.out.println("5 - Logout");
+        System.out.print("Escolha uma opcao: ");
+
+        int opcao = Integer.parseInt(input.nextLine());
+
+        switch (opcao) {
+            case 1:
+                listarDashboards();
+                break;
+            case 2:
+                acessarDashboard();
+                break;
+            case 3:
+                criarDashboard();
+                break;
+            case 4:
+                excluirDashboard();
+                break;
+            case 5:
+                System.out.println("Fazendo logout...");
+                loggedUser = null; // Isso faz o laço voltar para o menu de autenticação
+                break;
+            default:
+                System.out.println("Opcao inválida! Tente novamente.");
+                break;
+        }
+    }
+
+    private void listarDashboards() {
+        List<Dashboard> dashboards = loggedUser.getDashboards();
+
+        if (dashboards.isEmpty()) {
+            System.out.println("\nVocê ainda não possui nenhum Dashboard.");
+            return;
+        }
+
+        System.out.println("\n--- Seus Dashboards ---");
+        for (int i = 0; i < dashboards.size(); i++) {
+            System.out.println((i + 1) + " - " + dashboards.get(i).getTitle());
+        }
+    }
+
+    private void criarDashboard() {
+        System.out.print("\nDigite o título do novo Dashboard: ");
+        String titulo = input.nextLine();
+
+        Dashboard novoDash = new Dashboard(titulo);
+        loggedUser.getDashboards().add(novoDash);
+
+        database.saveUsers(usersList);
+
+        System.out.println("Dashboard '" + titulo + "' criado com sucesso!");
+    }
+
+    private void excluirDashboard() {
+        listarDashboards();
+
+        if (loggedUser.getDashboards().isEmpty()) {
+            return;
+        }
+
+        System.out.print("\nDigite o número do Dashboard que deseja excluir (ou 0 para cancelar): ");
+        int index = Integer.parseInt(input.nextLine()) - 1;
+
+        if (index == -1) {
+            System.out.println("Operação cancelada.");
+            return;
+        }
+
+        if (index >= 0 && index < loggedUser.getDashboards().size()) {
+            Dashboard dashRemovido = loggedUser.getDashboards().remove(index);
+            database.saveUsers(usersList);
+            System.out.println("Dashboard '" + dashRemovido.getTitle() + "' excluído com sucesso!");
+        } else {
+            System.out.println("Opção inválida!");
+        }
+    }
+
+    private void acessarDashboard() {
+        listarDashboards();
+
+        if (loggedUser.getDashboards().isEmpty()) {
+            return;
+        }
+
+        System.out.print("\nDigite o número do Dashboard que deseja acessar: ");
+        int index = Integer.parseInt(input.nextLine()) - 1;
+
+        if (index >= 0 && index < loggedUser.getDashboards().size()) {
+            Dashboard dashboardSelecionado = loggedUser.getDashboards().get(index);
+            System.out.println("Acessando '" + dashboardSelecionado.getTitle() + "'...");
+
+            menuDoDashboard(dashboardSelecionado);
+        } else {
+            System.out.println("Opção inválida!");
+        }
+    }
+
+    private void menuDoDashboard(Dashboard dashboard) {
 
     }
+
 }

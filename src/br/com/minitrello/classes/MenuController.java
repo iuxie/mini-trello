@@ -26,6 +26,28 @@ public class MenuController {
     }
 
     public void authenticateMenu() {
+        System.out.println("\n==== Menu de Autenticacao ====");
+        System.out.println("1 - Fazer Login");
+        System.out.println("2 - Criar usuário");
+        System.out.println("3 - Finalizar programa");
+        System.out.print("Escolha uma opcao: ");
+
+        int opcao = Integer.parseInt(input.nextLine());
+
+        switch (opcao) {
+            case 1:
+                System.out.println("Implementando lógica");
+                break;
+            case 2:
+                System.out.println("Implementando lógica");
+                break;
+            case 3:
+                running = false;
+                break;
+            default:
+                System.out.println("Opcao inválida! Tente novamente.");
+                break;
+        }
 
     }
 

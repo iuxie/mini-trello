@@ -208,7 +208,8 @@ public class MenuController {
             System.out.println("6 - Editar Card");
             System.out.println("7 - Editar Coluna");
             System.out.println("8 - Alterar Título do Dashboard");
-            System.out.println("9 - Voltar ao Menu Principal");
+            System.out.println("9 - Mover Card");
+            System.out.println("10 - Voltar ao Menu Principal");
             System.out.print("Escolha sua opcao: ");
 
             int option = readIntegerOption();
@@ -239,6 +240,9 @@ public class MenuController {
                     editDashboardTitle(dashboard);
                     break;
                 case 9:
+                    moveCardColumn(dashboard);
+                    break;
+                case 10:
                     inDashboard = false;
                     break;
                 default:
@@ -246,6 +250,66 @@ public class MenuController {
                     break;
             }
         }
+    }
+
+    private void moveCardColumn(Dashboard d) {
+        if (d.getColumns().isEmpty()) {
+            System.out.println("\nEste dashboard não possui colunas.");
+            return;
+        }
+
+        showColumns(d);
+
+        System.out.print("\nDe qual coluna você quer mover o card? (Digite o número da coluna de origem): ");
+        int originIndex = Integer.parseInt(input.nextLine());
+
+        if (originIndex < 0 || originIndex >= d.getColumns().size()) {
+            System.out.println("Coluna de origem inválida.");
+            return;
+        }
+
+        Column originColumn = d.getColumns().get(originIndex);
+
+        if (originColumn.getCards().isEmpty()) {
+            System.out.println("A coluna '" + originColumn.getTitle() + "' não possui cards para mover.");
+            return;
+        }
+
+        System.out.println("\n--- Cards na Coluna '" + originColumn.getTitle() + "' ---");
+        for (int i = 0; i < originColumn.getCards().size(); i++) {
+            System.out.println(i + " - " + originColumn.getCards().get(i).getTitle());
+        }
+
+        System.out.print("Digite o número do Card a ser movido: ");
+        int cardIndex = Integer.parseInt(input.nextLine());
+
+        if (cardIndex < 0 || cardIndex >= originColumn.getCards().size()) {
+            System.out.println("Card inválido.");
+            return;
+        }
+
+        Card cardToMove = originColumn.getCards().get(cardIndex);
+
+        System.out.print("\nPara qual coluna deseja mover o card? (Digite o número da coluna de destino): ");
+        int destinyIndex = Integer.parseInt(input.nextLine());
+
+        if (destinyIndex < 0 || destinyIndex >= d.getColumns().size()) {
+            System.out.println("Coluna de destino inválida.");
+            return;
+        }
+
+        Column destinyColumn = d.getColumns().get(destinyIndex);
+
+        if (originColumn.equals(destinyColumn)) {
+            System.out.println("O card já está nesta coluna.");
+            return;
+        }
+
+        d.changeCardColumn(cardToMove, originColumn, destinyColumn);
+
+        database.saveUsers(usersList);
+
+        System.out.println("Card '" + cardToMove.getTitle() + "' movido com sucesso para a coluna '" + destinyColumn.getTitle() + "'!");
     }
 
     private void showColumns(Dashboard d) {

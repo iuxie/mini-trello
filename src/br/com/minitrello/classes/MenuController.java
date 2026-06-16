@@ -38,7 +38,7 @@ public class MenuController {
         System.out.println("3 - Finalizar programa");
         System.out.print("Escolha uma opcao: ");
 
-        int option = Integer.parseInt(input.nextLine());
+        int option = readIntegerOption();
 
         switch (option) {
             case 1:
@@ -100,7 +100,7 @@ public class MenuController {
         System.out.println("5 - Logout");
         System.out.print("Escolha uma opcao: ");
 
-        int option = Integer.parseInt(input.nextLine());
+        int option = readIntegerOption();
 
         switch (option) {
             case 1:
@@ -159,7 +159,7 @@ public class MenuController {
         }
 
         System.out.print("\nDigite o número do Dashboard que deseja excluir (ou -1 para cancelar): ");
-        int index = Integer.parseInt(input.nextLine());
+        int index = readIntegerOption();
 
         if (index == -1) {
             System.out.println("Operação cancelada.");
@@ -183,7 +183,7 @@ public class MenuController {
         }
 
         System.out.print("\nDigite o número do Dashboard que deseja acessar: ");
-        int index = Integer.parseInt(input.nextLine());
+        int index = readIntegerOption();
 
         if (index >= 0 && index < loggedUser.getDashboards().size()) {
             Dashboard selectedDash = loggedUser.getDashboards().get(index);
@@ -211,7 +211,7 @@ public class MenuController {
             System.out.println("9 - Voltar ao Menu Principal");
             System.out.print("Escolha sua opcao: ");
 
-            int option = Integer.parseInt(input.nextLine());
+            int option = readIntegerOption();
 
             switch (option) {
                 case 1:
@@ -282,7 +282,7 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nEscolha a coluna em que o Card será criado (digite apenas o número): ");
-        int index = Integer.parseInt(input.nextLine());
+        int index = readIntegerOption();
 
         if (index >= 0 && index < d.getColumns().size()) {
             System.out.print("Digite o nome do Card: ");
@@ -292,7 +292,7 @@ public class MenuController {
 
             Priority.showPrioritys();
             System.out.print("Escolha a prioridade do Card: ");
-            int option = Integer.parseInt(input.nextLine());
+            int option = readIntegerOption();
             Priority tag = Priority.NORMAL; // Padrão caso o usuário erre
 
             switch (option) {
@@ -331,7 +331,7 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nDigite o número da Coluna que deseja excluir (Isso excluirá todos os cards nela): ");
-        int index = Integer.parseInt(input.nextLine());
+        int index = readIntegerOption();
 
         if (index >= 0 && index < d.getColumns().size()) {
             d.getColumns().remove(index);
@@ -350,7 +350,7 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nDe qual coluna você quer excluir um card? (Digite o número da coluna): ");
-        int colIndex = Integer.parseInt(input.nextLine());
+        int colIndex = readIntegerOption();
 
         if (colIndex >= 0 && colIndex < d.getColumns().size()) {
             Column col = d.getColumns().get(colIndex);
@@ -360,7 +360,7 @@ public class MenuController {
             }
 
             System.out.print("Digite o número do Card a ser excluído: ");
-            int cardIndex = Integer.parseInt(input.nextLine());
+            int cardIndex = readIntegerOption();
 
             if (cardIndex >= 0 && cardIndex < col.getCards().size()) {
                 col.getCards().remove(cardIndex);
@@ -379,12 +379,12 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nDe qual coluna é o card que deseja editar? ");
-        int colIndex = Integer.parseInt(input.nextLine());
+        int colIndex = readIntegerOption();
 
         if (colIndex >= 0 && colIndex < d.getColumns().size()) {
             Column col = d.getColumns().get(colIndex);
             System.out.print("Digite o número do Card a ser editado: ");
-            int cardIndex = Integer.parseInt(input.nextLine());
+            int cardIndex = readIntegerOption();
 
             if (cardIndex >= 0 && cardIndex < col.getCards().size()) {
                 Card card = col.getCards().get(cardIndex);
@@ -408,7 +408,7 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nDigite o número da coluna a ser editada: ");
-        int index = Integer.parseInt(input.nextLine());
+        int index = readIntegerOption();
 
         if (index >= 0 && index < d.getColumns().size()) {
             System.out.print("Novo título da coluna: ");
@@ -428,6 +428,16 @@ public class MenuController {
             d.setTitle(novoTitulo);
             database.saveUsers(usersList);
             System.out.println("Título alterado com sucesso!");
+        }
+    }
+
+    private int readIntegerOption() {
+        while (true) {
+            try {
+                return Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida! Por favor, digite apenas números: ");
+            }
         }
     }
 

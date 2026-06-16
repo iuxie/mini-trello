@@ -73,18 +73,13 @@ public class MenuController {
     }
 
     private void createUser() {
-        System.out.print("Digite seu nome: ");
-        String name = input.nextLine();
-        System.out.print("Digite seu email: ");
-        String email = input.nextLine();
-        System.out.print("Digite sua senha: ");
-        String password = input.nextLine();
+        String name = readRequiredString("Digite seu nome: ");
+        String email = readRequiredString("Digite seu email: ");
+        String password = readRequiredString("Digite sua senha: ");
 
         User newUser = new User(name, email, password);
         usersList.add(newUser);
-
         loggedUser = newUser;
-
         database.saveUsers(usersList);
 
         System.out.println("Usuário criado com sucesso!");
@@ -140,12 +135,10 @@ public class MenuController {
     }
 
     private void createDashboard() {
-        System.out.print("\nDigite o título do novo Dashboard: ");
-        String title = input.nextLine();
+        String title = readRequiredString("\nDigite o título do novo Dashboard: ");
 
         Dashboard newDash = new Dashboard(title);
         loggedUser.getDashboards().add(newDash);
-
         database.saveUsers(usersList);
 
         System.out.println("Dashboard '" + title + "' criado com sucesso!");
@@ -328,13 +321,12 @@ public class MenuController {
     }
 
     private void createColumn(Dashboard d) {
-        System.out.print("Informe o nome da coluna: ");
-        String name = input.nextLine();
+        String name = readRequiredString("Informe o nome da coluna: ");
 
         Column newColumn = new Column(name);
         d.addColumn(newColumn);
-
         database.saveUsers(usersList);
+
         System.out.println("Coluna '" + newColumn.getTitle() + "' adicionada com sucesso!");
     }
 
@@ -346,32 +338,23 @@ public class MenuController {
 
         showColumns(d);
         System.out.print("\nEscolha a coluna em que o Card será criado (digite apenas o número): ");
-        int index = readIntegerOption();
+        int index = Integer.parseInt(input.nextLine());
 
         if (index >= 0 && index < d.getColumns().size()) {
-            System.out.print("Digite o nome do Card: ");
-            String name = input.nextLine();
-            System.out.print("Digite a descricao do Card: ");
-            String description = input.nextLine();
+
+            String name = readRequiredString("Digite o nome do Card: ");
+            String description = readRequiredString("Digite a descricao do Card: ");
 
             Priority.showPrioritys();
             System.out.print("Escolha a prioridade do Card: ");
-            int option = readIntegerOption();
-            Priority tag = Priority.NORMAL; // Padrão caso o usuário erre
+            int option = Integer.parseInt(input.nextLine());
+            Priority tag = Priority.NORMAL;
 
             switch (option) {
-                case 1:
-                    tag = Priority.BAIXA;
-                    break;
-                case 2:
-                    tag = Priority.NORMAL;
-                    break;
-                case 3:
-                    tag = Priority.ALTA;
-                    break;
-                case 4:
-                    tag = Priority.URGENTE;
-                    break;
+                case 1: tag = Priority.BAIXA; break;
+                case 2: tag = Priority.NORMAL; break;
+                case 3: tag = Priority.ALTA; break;
+                case 4: tag = Priority.URGENTE; break;
                 default:
                     System.out.println("Opção de prioridade inválida. Definido como NORMAL.");
                     break;
@@ -502,6 +485,21 @@ public class MenuController {
             } catch (NumberFormatException e) {
                 System.out.print("Entrada inválida! Por favor, digite apenas números: ");
             }
+        }
+    }
+
+    private String readRequiredString(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            // Lemos o texto e usamos o .trim() para remover espaços em branco invisíveis
+            String valor = input.nextLine().trim();
+
+            if (!valor.isEmpty()) {
+                return valor; // Se não estiver vazio, devolve o texto e sai do laço
+            }
+
+            // Se estiver vazio, exibe a mensagem de erro e o laço repete
+            System.out.println("Erro: Este campo é obrigatório e não pode ficar em branco.");
         }
     }
 
